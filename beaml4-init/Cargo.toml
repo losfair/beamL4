@@ -1,0 +1,22 @@
+[package]
+name = "beaml4-init"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+algorithms = { path = "../algorithms" }
+ipc = { path = "../ipc" }
+vmm = { path = "../vmm" }
+
+acpi.workspace = true
+bitflags.workspace = true
+elf.workspace = true
+futures.workspace = true
+heapless.workspace = true
+intrusive-collections.workspace = true
+rkyv.workspace = true
+sel4.workspace = true
+sel4-root-task.workspace = true
+spin.workspace = true
+talc.workspace = true
+x86.workspace = true

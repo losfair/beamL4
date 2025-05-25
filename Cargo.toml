@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = ["algorithms", "beaml4-init", "dbgserver", "ipc", "logserver", "timeserver", "virtioserver", "vmm", "vmmserver"]
+
+[workspace.dependencies]
+acpi = { git = "https://github.com/IsaacWoods/acpi", rev = "88fd1346399e155090acfbf01461f7cc19b82f84" }
+bitflags = "2"
+bitfield = "0.19"
+elf = { version = "0.7", default-features = false }
+futures = { version = "0.3", default-features = false, features = [
+    "async-await",
+] }
+heapless = "0.8"
+iced-x86 = { version = "1", default-features = false, features = [
+    "no_std",
+    "decoder",
+    "intel",
+] }
+intrusive-collections = { version = "0.9", features = ["nightly"] }
+rkyv = { version = "0.8", default-features = false, features = [
+    "alloc",
+    "bytecheck",
+] }
+pc-keyboard = "0.8"
+scapegoat = { version = "2" }
+sel4 = { git = "https://github.com/seL4/rust-sel4", rev = "ac5627ba7a67e71f33a8eb1c5d05de09bf94ef5e" }
+sel4-root-task = { git = "https://github.com/seL4/rust-sel4", rev = "ac5627ba7a67e71f33a8eb1c5d05de09bf94ef5e" }
+spin = "0.10"
+talc = "4"
+x86 = "0.52"
+xxhash-rust = { version = "0.8", features = ["const_xxh3"] }

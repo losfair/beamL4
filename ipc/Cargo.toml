@@ -1,0 +1,13 @@
+[package]
+name = "ipc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+algorithms = { path = "../algorithms" }
+
+heapless.workspace = true
+intrusive-collections.workspace = true
+rkyv.workspace = true
+sel4.workspace = true
+xxhash-rust.workspace = true

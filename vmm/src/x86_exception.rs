@@ -1,0 +1,14 @@
+pub const DE: u8 = 0x00; // Divide Error
+pub const DB: u8 = 0x01; // Debug Exception
+pub const NMI: u8 = 0x02; // Non-Maskable Interrupt
+pub const BP: u8 = 0x03; // Breakpoint Exception
+pub const OF: u8 = 0x04; // Overflow Exception
+pub const BR: u8 = 0x05; // BOUND Range Exceeded Exception
+pub const UD: u8 = 0x06; // Invalid Opcode Exception
+pub const NM: u8 = 0x07; // Device Not Available Exception
+pub const DF: u8 = 0x08; // Double Fault Exception
+pub const TS: u8 = 0x0A; // Invalid TSS Exception
+pub const NP: u8 = 0x0B; // Segment Not Present Exception
+pub const SS: u8 = 0x0C; // Stack Segment Fault
+pub const GP: u8 = 0x0D; // General Protection Exception
+pub const PF: u8 = 0x0E; // Page Fault Exception

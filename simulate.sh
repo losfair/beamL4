@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname $0)"
+#exec qemu-system-x86_64 -enable-kvm -smp 2 -cpu host -m 512M -cdrom ./boot.iso -serial stdio -display none
+#exec qemu-system-x86_64 -s -enable-kvm -machine q35,accel=kvm,kernel-irqchip=split -smp 1 -cpu host -m 2048M -cdrom ./boot.iso -boot d -serial stdio -display none -drive file=/home/user/.ops/images/go-test,format=raw,if=none,id=drive0 -device virtio-scsi-pci,id=scsi0 -device scsi-hd,drive=drive0,bus=scsi0.0 -netdev tap,id=net0,helper=/usr/lib/qemu/qemu-bridge-helper -device virtio-net-pci,netdev=net0
+# exec qemu-system-x86_64 -s -enable-kvm -machine q35,accel=kvm,kernel-irqchip=split -smp 2 -cpu host -m 512M -cdrom ./boot.iso -boot d -serial stdio -display none -drive file=/home/user/.ops/images/hvctl_release,format=raw,if=none,id=drive0 -device virtio-scsi-pci,id=scsi0 -device scsi-hd,drive=drive0,bus=scsi0.0 -netdev tap,id=net0,helper=/usr/lib/qemu/qemu-bridge-helper -device virtio-net-pci,netdev=net0
+exec qemu-system-x86_64 -s -enable-kvm -machine q35,accel=kvm,kernel-irqchip=split -smp 2 -cpu host -m 512M -cdrom ./boot.iso -boot d -serial stdio -display none -drive file=/home/user/.ops/images/fediblog-dev,format=raw,if=none,id=drive0 -device virtio-scsi-pci,id=scsi0 -device scsi-hd,drive=drive0,bus=scsi0.0 -netdev tap,id=net0,helper=/usr/lib/qemu/qemu-bridge-helper -device virtio-net-pci,netdev=net0
+#exec qemu-system-x86_64 -s -enable-kvm -machine q35,accel=kvm,kernel-irqchip=split -smp 2 -cpu host -m 512M -cdrom ./boot.iso -boot d -serial none -display curses -drive file=/home/user/.ops/images/fediblog-dev,format=raw,if=none,id=drive0 -device virtio-scsi-pci,id=scsi0 -device scsi-hd,drive=drive0,bus=scsi0.0 -netdev tap,id=net0,helper=/usr/lib/qemu/qemu-bridge-helper -device virtio-net-pci,netdev=net0
+#exec qemu-system-x86_64 -s -enable-kvm -machine q35,accel=kvm,kernel-irqchip=split -smp 2 -cpu host -m 2048M -cdrom ./boot.iso -boot d -serial stdio -display none -drive file=/home/user/beaml4-test/fediblog.img,format=raw,if=none,id=drive0 -device virtio-blk-pci,drive=drive0 -netdev tap,id=net0,helper=/usr/lib/qemu/qemu-bridge-helper -device virtio-net-pci,netdev=net0
+#exec qemu-system-x86_64 -enable-kvm -machine q35,accel=kvm,kernel-irqchip=split -smp 2 -cpu host -m 512M -cdrom ./boot.iso -boot d -serial stdio -display none -drive file=/home/user/.ops/images/hello-exe,format=raw,if=none,id=drive0 -device virtio-scsi-pci,id=scsi0 -device scsi-hd,drive=drive0,bus=scsi0.0 -netdev tap,id=net0,helper=/usr/lib/qemu/qemu-bridge-helper -device virtio-net-pci,netdev=net0
+

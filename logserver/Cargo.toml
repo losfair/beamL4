@@ -1,0 +1,14 @@
+[package]
+name = "logserver"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+algorithms = { path = "../algorithms" }
+ipc = { path = "../ipc" }
+
+heapless.workspace = true
+sel4.workspace = true
+spin.workspace = true
+talc.workspace = true
+x86.workspace = true

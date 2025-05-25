@@ -1,0 +1,18 @@
+[package]
+name = "vmm"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+algorithms = { path = "../algorithms" }
+ipc = { path = "../ipc" }
+
+bitfield.workspace = true
+futures.workspace = true
+heapless.workspace = true
+iced-x86.workspace = true
+intrusive-collections.workspace = true
+rkyv.workspace = true
+sel4.workspace = true
+x86.workspace = true
+xxhash-rust.workspace = true

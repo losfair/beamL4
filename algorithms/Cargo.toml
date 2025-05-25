@@ -1,0 +1,12 @@
+[package]
+name = "algorithms"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bitflags.workspace = true
+heapless.workspace = true
+intrusive-collections.workspace = true
+
+[dev-dependencies]
+rand = "0.8"

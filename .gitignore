@@ -1,0 +1,8 @@
+/target/
+/iso/
+*.iso
+/kbuild/
+
+*.img
+*.o
+*.elf

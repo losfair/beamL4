@@ -1,0 +1,5 @@
+{
+    "Kernel": "/dev/null",
+    "Args": ["run", "-A", "main.ts"],
+    "Files": ["main.ts", "vmcall.ts"]
+}
