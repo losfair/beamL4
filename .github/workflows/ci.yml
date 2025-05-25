@@ -1,0 +1,181 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, ci-setup ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-sel4:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Checkout beamL4
+      uses: actions/checkout@v4
+      with:
+        path: beamL4
+    
+    - name: Checkout seL4
+      uses: actions/checkout@v4
+      with:
+        repository: losfair/seL4
+        ref: fd9fd3799e98ac97b4cfd5165ead2cfe908a9fdf
+        path: seL4
+    
+    - name: Install seL4 dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          ninja-build \
+          python3-dev \
+          python3-pip \
+          libxml2-utils \
+          device-tree-compiler
+        
+        # Install Python dependencies for seL4
+        pip3 install --user sel4-deps
+    
+    - name: Build seL4 kernel
+      working-directory: beamL4
+      run: ./mkkernel.sh
+    
+    - name: Upload seL4 kernel
+      uses: actions/upload-artifact@v4
+      with:
+        name: sel4-kernel
+        path: beamL4/kbuild/
+        retention-days: 1
+
+  build-nanos:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Checkout nanos kernel
+      uses: actions/checkout@v4
+      with:
+        repository: losfair/nanos
+        ref: fb93e1103af03013d0e52756e2ab3f8af895b661
+        path: nanos
+    
+    - name: Install nanos dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          nasm
+    
+    - name: Build nanos kernel
+      working-directory: nanos
+      run: make -j$(nproc) kernel
+    
+    - name: Upload nanos kernel
+      uses: actions/upload-artifact@v4
+      with:
+        name: nanos-kernel
+        path: nanos/output/platform/pc/bin/kernel.elf
+        retention-days: 1
+
+  build-and-test:
+    runs-on: ubuntu-22.04
+    needs: [build-sel4, build-nanos]
+    
+    steps:
+    - name: Checkout beamL4
+      uses: actions/checkout@v4
+      with:
+        path: beamL4
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          u-boot-tools \
+          qemu-system-x86
+    
+    - name: Install Rust toolchain
+      uses: actions-rust-lang/setup-rust-toolchain@v1
+      with:
+        toolchain-file: beamL4/rust-toolchain.toml
+        components: rust-src
+    
+    - name: Download seL4 kernel
+      uses: actions/download-artifact@v4
+      with:
+        name: sel4-kernel
+        path: beamL4/kbuild/
+    
+    - name: Download nanos kernel
+      uses: actions/download-artifact@v4
+      with:
+        name: nanos-kernel
+        path: ./
+    
+    - name: Copy nanos kernel to beamL4
+      run: cp kernel.elf beamL4/nanos.elf
+    
+    - name: Build individual components
+      working-directory: beamL4
+      run: |
+        export RUSTFLAGS=""
+
+        # Build components in dependency order
+        cargo build --release --bin logserver
+        cargo build --release --bin timeserver
+        cargo build --release --bin virtioserver
+        cargo build --release --bin dbgserver
+        cargo build --release --bin vmmserver
+        
+        # Finally build beaml4-init which depends on all the above
+        cargo build --release --bin beaml4-init
+    
+    - name: Run tests
+      working-directory: beamL4
+      run: ./test.sh
+    
+    - name: Create ISO
+      working-directory: beamL4
+      run: ./mkiso.sh
+    
+    - name: Test QEMU boot
+      working-directory: beamL4
+      run: |
+        # Start QEMU in background and monitor output
+        FOUND=false
+        sudo timeout 30s qemu-system-x86_64 \
+          -enable-kvm \
+          -m 512M \
+          -smp 2 \
+          -cpu host \
+          -cdrom boot.iso \
+          -display none \
+          -serial stdio \
+          -no-reboot \
+          2>&1 | tee /proc/self/fd/2 | while read line; do
+          if echo "$line" | grep -q "RAMDISK: not detected"; then
+            echo "✓ Boot test passed: Found 'RAMDISK: not detected'"
+            sleep 3
+            sudo pkill -f qemu-system-x86_64 || true
+            echo "SUCCESS" > /tmp/boot_test_result
+            break
+          fi
+        done
+        
+        # Check if test passed
+        if [ -f /tmp/boot_test_result ] && [ "$(cat /tmp/boot_test_result)" = "SUCCESS" ]; then
+          rm -f /tmp/boot_test_result
+          exit 0
+        else
+          echo "✗ Boot test failed: 'RAMDISK: not detected' not found within 30s"
+          exit 1
+        fi
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: beaml4-iso
+        path: beamL4/boot.iso
+        retention-days: 7

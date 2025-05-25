@@ -54,8 +54,6 @@ extern "C" {
     static _binary_vmmserver_elf_end: u8;
     static _binary_nanos_elf_start: u8;
     static _binary_nanos_elf_end: u8;
-    static _binary_ramdisk_img_start: u8;
-    static _binary_ramdisk_img_end: u8;
 }
 
 pub fn start_logserver(

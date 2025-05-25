@@ -12,7 +12,6 @@ fn main() {
             .to_string();
     for (cwd, src, obj) in [
         (workspace_root.as_str(), "nanos.elf", "nanos.o"),
-        (workspace_root.as_str(), "ramdisk.img", "ramdisk.o"),
         (
             format!("{}/target/x86_64-sel4/release", workspace_root).as_str(),
             "logserver.elf",
