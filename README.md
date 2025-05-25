@@ -406,4 +406,6 @@ Key directories:
 
 ## License
 
-[License information would go here]
+MIT License
+
+Copyright (c) 2025 Heyang Zhou
